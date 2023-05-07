@@ -11,8 +11,8 @@ export default function Navigation({ children }: { children: JSX.Element }): JSX
     const user = isAuthenticated()
 
     useEffect(() => {
-        if (user !== '') navigate('/chat-page')
-        if (user === '') navigate('/login')
+        if (user) navigate('/chat-page')
+        if (!user && pathname === "/chat-page") navigate('/login')
     }, [user])
 
     const handleLogOut = () => {

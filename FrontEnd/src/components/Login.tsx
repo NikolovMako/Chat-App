@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box, Button, IconButton, InputAdornment, SvgIcon, TextField, Typography, CircularProgress, Snackbar } from '@mui/material'
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -10,6 +10,7 @@ import { userValidation } from '../schema/validation';
 import { yupResolver } from '@hookform/resolvers/yup'
 import UserContext from '../hooks/useToken';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 
 export default function Login() {
     const [isHidden, setIsHidden] = useState<boolean>(true)
@@ -20,6 +21,7 @@ export default function Login() {
     const [newToken, setToken] = React.useContext(UserContext)
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [message, setMessage] = useState<string>('')
+    const { state } = useLocation()
 
     const { handleSubmit, register, formState: { isValid, errors } } = useForm({
         defaultValues: {
@@ -49,6 +51,13 @@ export default function Login() {
             setIsOpen(true)
         }
     }
+
+    useEffect(() => {
+        if (state && state?.isSnackbar) {
+            setMessage(`User ${state?.user} created successfully`)
+            setIsOpen(true)
+        }
+    }, [])
 
     const onSubmit = (data: any) => fetchData(data)
     return <Box width='100vw' height='100vh' display='flex' justifyContent='center'>

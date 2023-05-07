@@ -35,7 +35,12 @@ export default function Register() {
             setIsLoading(true)
             setTimeout(() => {
                 setIsLoading(false)
-                navigate('/login')
+                navigate('/login',{
+                    state: {
+                        user: data?.username || '',
+                        isSnackbar: true,
+                    }
+                })
             }, 1000)
         } catch (err) {
             // @ts-expect-error response error
