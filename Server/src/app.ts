@@ -5,14 +5,13 @@ import cors from "cors";
 import helmet from "helmet";
 import { AbstractController } from "./AbstractController";
 import mongoose from "mongoose";
-
+import { Server } from "socket.io";
 export default class App {
     app: Application;
     port: number;
 
     constructor(controllers: Array<AbstractController>, port: number) {
         this.app = express();
-
         this.port = port;
         this.dbConnect();
         this.initializeMiddleware();
@@ -30,8 +29,21 @@ export default class App {
         });
     }
     public listen() {
-        this.app.listen(this.port, () => {
+        const server = this.app.listen(this.port, () => {
             console.log(`App listening on port ${process.env.PORT}`);
+        });
+        const io = new Server(server, {
+            cors: {
+                origin: `http://localhost:3000`,
+                credentials: true
+            }
+        })
+        io.sockets.on('connection', (socket) => {
+            socket.on('send-msg', (data) => {
+                if (data) {
+                    socket.broadcast.emit('msg-receive', data)
+                }
+            })
         });
     }
     public dbConnect() {

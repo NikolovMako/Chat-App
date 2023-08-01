@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { Box, Button, Typography } from "@mui/material";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import UserContext, { isAuthenticated } from "../hooks/useToken";
 import jwt_decode from "jwt-decode"
 
-type DecodedUser = {
+export type DecodedUser = {
     exp: number;
     iat: number;
     user: string;
